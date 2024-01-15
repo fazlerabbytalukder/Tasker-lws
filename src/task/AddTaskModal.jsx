@@ -1,7 +1,7 @@
 import { useState } from "react";
 
-export default function AddTaskModal({ onSave }) {
-    const [task, setTask] = useState({
+export default function AddTaskModal({ onSave, taskToUpdate }) {
+    const [task, setTask] = useState(taskToUpdate || {
         id: crypto.randomUUID(),
         title: "",
         description: "",
@@ -9,6 +9,8 @@ export default function AddTaskModal({ onSave }) {
         priority: "",
         isFavorite: false,
     });
+
+    const [isAdd, setIsAdd] = useState(Object.is(taskToUpdate, null));
 
     const handleChange = (evt) => {
         const name = evt.target.name;
@@ -32,7 +34,7 @@ export default function AddTaskModal({ onSave }) {
                 <h2
                     className="mb-9 text-center text-2xl font-bold text-white lg:mb-11 lg:text-[28px]"
                 >
-                    Add New Task
+                    {isAdd ? "Add New Task" : "Edit Task"}
                 </h2>
 
                 <div className="space-y-9 text-white lg:space-y-10">
@@ -100,7 +102,7 @@ export default function AddTaskModal({ onSave }) {
                         className="rounded bg-blue-600 px-4 py-2 text-white transition-all hover:opacity-80"
                         onClick={(event) => {
                             event.preventDefault();
-                            onSave(task);
+                            onSave(task, isAdd);
                         }}
                     >
                         Save
